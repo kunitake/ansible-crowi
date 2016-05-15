@@ -1,0 +1,11 @@
+---
+- name: install common packages and basic settings.
+  hosts: all
+  become: yes
+  roles:
+  - common
+
+- name: install crowi
+  hosts: all
+  roles:
+  - crowi

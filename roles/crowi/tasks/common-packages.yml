@@ -1,0 +1,14 @@
+---
+- name: install packages
+  become: yes
+  yum: name={{ item }} enablerepo=epel state=installed
+  with_items:
+    - curl
+    - mongodb-server
+    - python-virtualenv
+    - python-pip
+#    - python-pymongo
+    - gcc
+    - gcc-c++
+    - python-devel
+    - mongodb

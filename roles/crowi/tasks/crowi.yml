@@ -1,0 +1,33 @@
+---
+- name: src dir permission
+  become: yes
+  file: path=/usr/local/src/crowi mode=755 state=directory owner={{ ansible_user_id }}
+
+#- name: Download crowi
+#  get_url: url="https://github.com/crowi/crowi/archive/{{ crowi_version }}.tar.gz" dest=/tmp
+
+- name: git clone
+  git: repo=https://github.com/crowi/crowi dest=/usr/local/src/crowi update=no
+
+- name: npm install が実行済かを確認
+  stat: path=/usr/local/src/crowi/node_modules
+  register: node_modules
+
+- name: npm install を実行
+  shell: npm install 
+  args:
+    chdir: /usr/local/src/crowi
+  when: not node_modules.stat.exists
+
+- name: systemd service file をアップロード
+  become: yes
+  copy: src=crowi.service dest=/etc/systemd/system mode=0644
+
+- name: put env file
+  become: yes
+  template: src=crowi.sysconfig.j2 dest=/etc/sysconfig/crowi owner=root mode=0600
+  notify: system daemon reload
+
+- name: crowiを起動
+  become: yes
+  service: name=crowi state=started enabled=yes  

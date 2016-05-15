@@ -1,0 +1,6 @@
+---
+nodejs_version: 4.4.3-1
+crowi_database: crowidb
+crowi_user: crowiuser
+crowi_password: change_other_pass
+password_seed: somesecretstring

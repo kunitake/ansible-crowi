@@ -1,0 +1,29 @@
+---
+- name: mongod は先に動かしておく(自動起動もon)
+  become: yes
+  service: name=mongod state=started enabled=yes
+
+- name: ansible動作用pymongoは pip で入れる(packageは古いので）
+  become: yes
+  pip: name=pymongo
+
+- name: mongod に adminユーザにパスワードを設定
+  become: yes
+  mongodb_user:
+    database: admin
+    name: admin
+    password: "{{ crowi_password }}"
+    state: present
+
+- name: mongod に crowi 用ユーザを作成
+  become: yes
+  mongodb_user:
+    login_user: admin
+    login_password: "{{ crowi_password }}"
+    database: "{{ crowi_database }}"
+    name: "{{ crowi_user }}"
+    password: "{{ crowi_password }}"
+    roles:
+    - { db: "{{crowi_database}}", role: 'readWrite'}
+    state: present
+

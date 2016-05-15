@@ -1,0 +1,6 @@
+---
+- include: common-packages.yml
+- include: mongo.yml
+- include: nodejs.yml
+- include: crowi.yml
+- include: firewalld.yml

@@ -1,0 +1,4 @@
+---
+- include: common-packages.yml
+- include: hostname.yml
+- include: selinux.yml

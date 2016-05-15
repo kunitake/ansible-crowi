@@ -1,0 +1,4 @@
+---
+- name: crowi用の 3000番ポートを open
+  become: yes
+  firewalld: zone=public port=3000/tcp state=enabled  permanent=true immediate=yes
