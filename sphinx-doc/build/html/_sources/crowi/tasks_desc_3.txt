@@ -1,0 +1,1 @@
+.. ansible動作用pymongoは pip で入れる(packageは古いので）

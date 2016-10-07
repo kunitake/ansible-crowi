@@ -1,0 +1,412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>crowi role &#8212; ansible-crowi&#39;s playbook document 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="top" title="ansible-crowi&#39;s playbook document 1.0 ドキュメント" href="index.html" />
+    <link rel="prev" title="common role" href="common.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="crowi-role">
+<span id="ansible-roles-crowi"></span><h1>crowi role<a class="headerlink" href="#crowi-role" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>タスク一覧<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="#tasks-crowi-1"><span class="std std-ref">install packages</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-2"><span class="std std-ref">mongod は先に動かしておく(自動起動もon)</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-3"><span class="std std-ref">ansible動作用pymongoは pip で入れる(packageは古いので）</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-4"><span class="std std-ref">mongod に adminユーザにパスワードを設定</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-5"><span class="std std-ref">mongod に crowi 用ユーザを作成</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-6"><span class="std std-ref">install nodejs</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-7"><span class="std std-ref">src dir permission</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-8"><span class="std std-ref">git clone</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-9"><span class="std std-ref">npm install が実行済かを確認</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-10"><span class="std std-ref">npm install を実行</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-11"><span class="std std-ref">systemd service file をアップロード</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-12"><span class="std std-ref">put env file</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-13"><span class="std std-ref">crowiを起動</span></a></li>
+<li><a class="reference internal" href="#tasks-crowi-14"><span class="std std-ref">crowi用の 3000番ポートを open</span></a></li>
+</ul>
+<div class="section" id="install-packages">
+<span id="tasks-crowi-1"></span><span id="index-0"></span><h3>install packages<a class="headerlink" href="#install-packages" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-install-packages admonition">
+<p class="first admonition-title">install packages</p>
+<blockquote>
+<div>name={{ item }} enablerepo=epel state=installed</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body"><p class="first">yum</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">with_items:</th><td class="field-body"><ul class="first last simple">
+<li>curl</li>
+<li>mongodb-server</li>
+<li>python-virtualenv</li>
+<li>python-pip</li>
+<li>gcc</li>
+<li>gcc-c++</li>
+<li>python-devel</li>
+<li>mongodb</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="mongod-on">
+<span id="tasks-crowi-2"></span><span id="index-1"></span><h3>mongod は先に動かしておく(自動起動もon)<a class="headerlink" href="#mongod-on" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-mongod-on admonition">
+<p class="first admonition-title">mongod は先に動かしておく(自動起動もon)</p>
+<blockquote>
+<div>name=mongod state=started enabled=yes</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">service</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="ansiblepymongo-pip-package">
+<span id="tasks-crowi-3"></span><span id="index-2"></span><h3>ansible動作用pymongoは pip で入れる(packageは古いので）<a class="headerlink" href="#ansiblepymongo-pip-package" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-ansiblepymongo-pip-package admonition">
+<p class="first admonition-title">ansible動作用pymongoは pip で入れる(packageは古いので）</p>
+<blockquote>
+<div>name=pymongo</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">pip</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="mongod-admin">
+<span id="tasks-crowi-4"></span><span id="index-3"></span><h3>mongod に adminユーザにパスワードを設定<a class="headerlink" href="#mongod-admin" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-mongod-admin admonition">
+<p class="first admonition-title">mongod に adminユーザにパスワードを設定</p>
+<blockquote>
+<div>state=present password={{ crowi_password }} name=admin database=admin</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">mongodb_user</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="mongod-crowi">
+<span id="tasks-crowi-5"></span><span id="index-4"></span><h3>mongod に crowi 用ユーザを作成<a class="headerlink" href="#mongod-crowi" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-mongod-crowi admonition">
+<p class="first admonition-title">mongod に crowi 用ユーザを作成</p>
+<blockquote>
+<div>state=present password={{ crowi_password }} name={{ crowi_user }} roles={&#8216;db&#8217;: &#8216;{{crowi_database}}&#8217;, &#8216;role&#8217;: &#8216;readWrite&#8217;} database={{ crowi_database }} login_user=admin login_password={{ crowi_password }}</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">mongodb_user</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="install-nodejs">
+<span id="tasks-crowi-6"></span><span id="index-5"></span><h3>install nodejs<a class="headerlink" href="#install-nodejs" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-install-nodejs admonition">
+<p class="first admonition-title">install nodejs</p>
+<blockquote>
+<div>name=https://rpm.nodesource.com/pub_4.x/el/7/x86_64/nodejs-{{ nodejs_version }}nodesource.el7.centos.x86_64.rpm state=present</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">yum</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="src-dir-permission">
+<span id="tasks-crowi-7"></span><span id="index-6"></span><h3>src dir permission<a class="headerlink" href="#src-dir-permission" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-src-dir-permission admonition">
+<p class="first admonition-title">src dir permission</p>
+<blockquote>
+<div>path=/usr/local/src/crowi mode=755 state=directory owner={{ ansible_user_id }}</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">file</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="git-clone">
+<span id="tasks-crowi-8"></span><span id="index-7"></span><h3>git clone<a class="headerlink" href="#git-clone" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-git-clone admonition">
+<p class="first admonition-title">git clone</p>
+<blockquote>
+<div>repo=https://github.com/crowi/crowi dest=/usr/local/src/crowi update=no</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">git</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="npm-install">
+<span id="tasks-crowi-9"></span><span id="index-8"></span><h3>npm install が実行済かを確認<a class="headerlink" href="#npm-install" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-npm-install admonition">
+<p class="first admonition-title">npm install が実行済かを確認</p>
+<blockquote>
+<div>path=/usr/local/src/crowi/node_modules</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">stat</td>
+</tr>
+<tr class="field-even field"><th class="field-name">register:</th><td class="field-body">node_modules</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="tasks-crowi-10">
+<span id="index-9"></span><span id="id2"></span><h3>npm install を実行<a class="headerlink" href="#tasks-crowi-10" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-npm-install admonition">
+<p class="first admonition-title">npm install を実行</p>
+<blockquote>
+<div>npm install</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">shell</td>
+</tr>
+<tr class="field-even field"><th class="field-name">when:</th><td class="field-body">not node_modules.stat.exists</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="systemd-service-file">
+<span id="tasks-crowi-11"></span><span id="index-10"></span><h3>systemd service file をアップロード<a class="headerlink" href="#systemd-service-file" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-systemd-service-file admonition">
+<p class="first admonition-title">systemd service file をアップロード</p>
+<blockquote>
+<div>src=crowi.service dest=/etc/systemd/system mode=0644</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">copy</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="put-env-file">
+<span id="tasks-crowi-12"></span><span id="index-11"></span><h3>put env file<a class="headerlink" href="#put-env-file" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-put-env-file admonition">
+<p class="first admonition-title">put env file</p>
+<blockquote>
+<div>src=crowi.sysconfig.j2 dest=/etc/sysconfig/crowi owner=root mode=0600</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">template</td>
+</tr>
+<tr class="field-even field"><th class="field-name">notify:</th><td class="field-body"><span class="xref std std-ref">system_daemon_reload</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="crowi">
+<span id="tasks-crowi-13"></span><span id="index-12"></span><h3>crowiを起動<a class="headerlink" href="#crowi" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-crowi admonition">
+<p class="first admonition-title">crowiを起動</p>
+<blockquote>
+<div>name=crowi state=started enabled=yes</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">service</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="crowi-3000-open">
+<span id="tasks-crowi-14"></span><span id="index-13"></span><h3>crowi用の 3000番ポートを open<a class="headerlink" href="#crowi-3000-open" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-crowi-3000-open admonition">
+<p class="first admonition-title">crowi用の 3000番ポートを open</p>
+<blockquote>
+<div>zone=public port=3000/tcp state=enabled  permanent=true immediate=yes</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">firewalld</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="section" id="notify">
+<h2>Notify一覧<a class="headerlink" href="#notify" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="#handlers-crowi-0"><span class="std std-ref">system daemon reload</span></a></li>
+</ul>
+<div class="section" id="system-daemon-reload">
+<span id="handlers-crowi-0"></span><span id="index-14"></span><h3>system daemon reload<a class="headerlink" href="#system-daemon-reload" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-system-daemon-reload admonition">
+<p class="first admonition-title">system daemon reload</p>
+<blockquote>
+<div>systemctl &#8211;system daemon-reload</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">shell</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">crowi role</a><ul>
+<li><a class="reference internal" href="#id1">タスク一覧</a><ul>
+<li><a class="reference internal" href="#install-packages">install packages</a></li>
+<li><a class="reference internal" href="#mongod-on">mongod は先に動かしておく(自動起動もon)</a></li>
+<li><a class="reference internal" href="#ansiblepymongo-pip-package">ansible動作用pymongoは pip で入れる(packageは古いので）</a></li>
+<li><a class="reference internal" href="#mongod-admin">mongod に adminユーザにパスワードを設定</a></li>
+<li><a class="reference internal" href="#mongod-crowi">mongod に crowi 用ユーザを作成</a></li>
+<li><a class="reference internal" href="#install-nodejs">install nodejs</a></li>
+<li><a class="reference internal" href="#src-dir-permission">src dir permission</a></li>
+<li><a class="reference internal" href="#git-clone">git clone</a></li>
+<li><a class="reference internal" href="#npm-install">npm install が実行済かを確認</a></li>
+<li><a class="reference internal" href="#tasks-crowi-10">npm install を実行</a></li>
+<li><a class="reference internal" href="#systemd-service-file">systemd service file をアップロード</a></li>
+<li><a class="reference internal" href="#put-env-file">put env file</a></li>
+<li><a class="reference internal" href="#crowi">crowiを起動</a></li>
+<li><a class="reference internal" href="#crowi-3000-open">crowi用の 3000番ポートを open</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#notify">Notify一覧</a><ul>
+<li><a class="reference internal" href="#system-daemon-reload">system daemon reload</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="common.html" title="前の章へ">common role</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/crowi.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, KUNITAKE Koichi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/crowi.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

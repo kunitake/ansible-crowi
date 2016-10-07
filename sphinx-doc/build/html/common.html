@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>common role &#8212; ansible-crowi&#39;s playbook document 1.0 ドキュメント</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="top" title="ansible-crowi&#39;s playbook document 1.0 ドキュメント" href="index.html" />
+    <link rel="next" title="crowi role" href="crowi.html" />
+    <link rel="prev" title="Welcome to ansible-crowi’s playbook document’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="common-role">
+<span id="ansible-roles-common"></span><h1>common role<a class="headerlink" href="#common-role" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>タスク一覧<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="#tasks-common-1"><span class="std std-ref">install epel release</span></a></li>
+<li><a class="reference internal" href="#tasks-common-2"><span class="std std-ref">install common packages</span></a></li>
+<li><a class="reference internal" href="#tasks-common-3"><span class="std std-ref">set-hostname</span></a></li>
+<li><a class="reference internal" href="#tasks-common-4"><span class="std std-ref">Set SELinux as permissive mode.</span></a></li>
+</ul>
+<div class="section" id="install-epel-release">
+<span id="tasks-common-1"></span><span id="index-0"></span><h3>install epel release<a class="headerlink" href="#install-epel-release" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-install-epel-release admonition">
+<p class="first admonition-title">install epel release</p>
+<blockquote>
+<div>name={{item}} state=installed</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body"><p class="first">yum</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">tags:</th><td class="field-body"><p class="first">common-packages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">with_items:</th><td class="field-body"><ul class="first last simple">
+<li>epel-release</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="install-common-packages">
+<span id="tasks-common-2"></span><span id="index-1"></span><h3>install common packages<a class="headerlink" href="#install-common-packages" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-install-common-packages admonition">
+<p class="first admonition-title">install common packages</p>
+<blockquote>
+<div>name={{item}} enablerepo=epel state=installed</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body"><p class="first">yum</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">tags:</th><td class="field-body"><p class="first">common-packages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">with_items:</th><td class="field-body"><ul class="first last simple">
+<li>git</li>
+<li>yum-utils</li>
+<li>telnet</li>
+<li>wget</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="set-hostname">
+<span id="tasks-common-3"></span><span id="index-2"></span><h3>set-hostname<a class="headerlink" href="#set-hostname" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-set-hostname admonition">
+<p class="first admonition-title">set-hostname</p>
+<blockquote>
+<div>name=&#8221;{{ inventory_hostname }}&#8221;</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">hostname</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="set-selinux-as-permissive-mode">
+<span id="tasks-common-4"></span><span id="index-3"></span><h3>Set SELinux as permissive mode.<a class="headerlink" href="#set-selinux-as-permissive-mode" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div class="admonition-set-selinux-as-permissive-mode admonition">
+<p class="first admonition-title">Set SELinux as permissive mode.</p>
+<blockquote>
+<div>policy=targeted state=permissive</div></blockquote>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">module:</th><td class="field-body">selinux</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">common role</a><ul>
+<li><a class="reference internal" href="#id1">タスク一覧</a><ul>
+<li><a class="reference internal" href="#install-epel-release">install epel release</a></li>
+<li><a class="reference internal" href="#install-common-packages">install common packages</a></li>
+<li><a class="reference internal" href="#set-hostname">set-hostname</a></li>
+<li><a class="reference internal" href="#set-selinux-as-permissive-mode">Set SELinux as permissive mode.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="前の章へ">Welcome to ansible-crowi&#8217;s playbook document&#8217;s documentation!</a></li>
+      <li>Next: <a href="crowi.html" title="次の章へ">crowi role</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/common.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, KUNITAKE Koichi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/common.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
