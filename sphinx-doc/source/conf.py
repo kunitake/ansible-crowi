@@ -336,3 +336,8 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
+
+def setup(app):
+    app.add_object_type('ansibleval', 'ansibleval',
+                        objname='ansible configuration value',
+                        indextemplate=u'pair: %s; Ansible設定値')
