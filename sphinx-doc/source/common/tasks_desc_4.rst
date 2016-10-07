@@ -1,0 +1,1 @@
+.. Set SELinux as permissive mode.
