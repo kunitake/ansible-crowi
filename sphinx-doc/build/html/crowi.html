@@ -1,5 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<!doctype html>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
@@ -8,7 +9,7 @@
     
     <title>crowi role &#8212; ansible-crowi&#39;s playbook document 1.0 ドキュメント</title>
     
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -24,19 +25,81 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
     <link rel="top" title="ansible-crowi&#39;s playbook document 1.0 ドキュメント" href="index.html" />
     <link rel="prev" title="common role" href="common.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
   </head>
   <body role="document">
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="common.html" title="common role"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ansible-crowi&#39;s playbook document 1.0 ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">crowi role</a><ul>
+<li><a class="reference internal" href="#id1">タスク一覧</a><ul>
+<li><a class="reference internal" href="#install-packages">install packages</a></li>
+<li><a class="reference internal" href="#mongod-on">mongod は先に動かしておく(自動起動もon)</a></li>
+<li><a class="reference internal" href="#ansiblepymongo-pip-package">ansible動作用pymongoは pip で入れる(packageは古いので）</a></li>
+<li><a class="reference internal" href="#mongod-admin">mongod に adminユーザにパスワードを設定</a></li>
+<li><a class="reference internal" href="#mongod-crowi">mongod に crowi 用ユーザを作成</a></li>
+<li><a class="reference internal" href="#install-nodejs">install nodejs</a></li>
+<li><a class="reference internal" href="#src-dir-permission">src dir permission</a></li>
+<li><a class="reference internal" href="#git-clone">git clone</a></li>
+<li><a class="reference internal" href="#npm-install">npm install が実行済かを確認</a></li>
+<li><a class="reference internal" href="#tasks-crowi-10">npm install を実行</a></li>
+<li><a class="reference internal" href="#systemd-service-file">systemd service file をアップロード</a></li>
+<li><a class="reference internal" href="#put-env-file">put env file</a></li>
+<li><a class="reference internal" href="#crowi">crowiを起動</a></li>
+<li><a class="reference internal" href="#crowi-3000-open">crowi用の 3000番ポートを open</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#notify">Notify一覧</a><ul>
+<li><a class="reference internal" href="#system-daemon-reload">system daemon reload</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="common.html"
+                        title="前の章へ">common role</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/crowi.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -335,78 +398,23 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">目次</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">crowi role</a><ul>
-<li><a class="reference internal" href="#id1">タスク一覧</a><ul>
-<li><a class="reference internal" href="#install-packages">install packages</a></li>
-<li><a class="reference internal" href="#mongod-on">mongod は先に動かしておく(自動起動もon)</a></li>
-<li><a class="reference internal" href="#ansiblepymongo-pip-package">ansible動作用pymongoは pip で入れる(packageは古いので）</a></li>
-<li><a class="reference internal" href="#mongod-admin">mongod に adminユーザにパスワードを設定</a></li>
-<li><a class="reference internal" href="#mongod-crowi">mongod に crowi 用ユーザを作成</a></li>
-<li><a class="reference internal" href="#install-nodejs">install nodejs</a></li>
-<li><a class="reference internal" href="#src-dir-permission">src dir permission</a></li>
-<li><a class="reference internal" href="#git-clone">git clone</a></li>
-<li><a class="reference internal" href="#npm-install">npm install が実行済かを確認</a></li>
-<li><a class="reference internal" href="#tasks-crowi-10">npm install を実行</a></li>
-<li><a class="reference internal" href="#systemd-service-file">systemd service file をアップロード</a></li>
-<li><a class="reference internal" href="#put-env-file">put env file</a></li>
-<li><a class="reference internal" href="#crowi">crowiを起動</a></li>
-<li><a class="reference internal" href="#crowi-3000-open">crowi用の 3000番ポートを open</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#notify">Notify一覧</a><ul>
-<li><a class="reference internal" href="#system-daemon-reload">system daemon reload</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="common.html" title="前の章へ">common role</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>このページ</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/crowi.txt"
-            rel="nofollow">ソースコードを表示</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>クイック検索</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="検索" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2016, KUNITAKE Koichi.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
-      
-      |
-      <a href="_sources/crowi.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="common.html" title="common role"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ansible-crowi&#39;s playbook document 1.0 ドキュメント</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, KUNITAKE Koichi.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8 で生成しました。
+    </div>
   </body>
 </html>
